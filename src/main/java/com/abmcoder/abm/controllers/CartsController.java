@@ -3,7 +3,6 @@ package com.abmcoder.abm.controllers;
 import com.abmcoder.abm.entities.Cart;
 import com.abmcoder.abm.services.CartsService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
