@@ -2,6 +2,9 @@ package com.abmcoder.abm.controllers;
 
 import com.abmcoder.abm.entities.Cart;
 import com.abmcoder.abm.services.CartsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path="api/v1/carts")
+@Tag(name = "Rutas de carrito", description = "CRUD carrito")
 public class CartsController {
 
     private static class UpdateProductRequest {
@@ -24,6 +28,8 @@ public class CartsController {
     private CartsService service;
 
     @PostMapping()
+    @Operation(summary = "Añade un producto al carrito", description = "En el caso de que no exista el producto en el carrito se crea uno nuevo," +
+            "en el caso que ya exista se le suma la nueva cantidad a comprar a la ya existente")
     public ResponseEntity<Cart> addToCart(@RequestBody Cart cart) {
         try {
             return new ResponseEntity<>(service.addToCart(cart), HttpStatus.CREATED);
@@ -34,6 +40,7 @@ public class CartsController {
     }
 
     @GetMapping()
+    @Operation(summary = "Obtiene todos los carritos", description = "Obtiene los productos de los carritos impagos, es decir, que todavía estan activos")
     public ResponseEntity<List<Cart>>  readProducts() {
         try {
             return ResponseEntity.ok(service.readCarts());
@@ -44,6 +51,7 @@ public class CartsController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtiene los productos del carrito del cliente", description = "Obtiene los productos del carrito impago de un cliente en especifico")
     public List<Cart> readCartsByClientId(@PathVariable("id") long id) {
         try {
             return service.readCartsByClientId(id);
@@ -53,6 +61,7 @@ public class CartsController {
         }
     }
 
+    @Operation(summary = "Elimina los productos del carrito del cliente", description = "Elimina los productos del carrito impagos de un cliente en especifico")
     @DeleteMapping("/{id}")
     public void destroyOneProduct(@PathVariable("id") long id) {
         try {
@@ -64,6 +73,7 @@ public class CartsController {
     }
 
     @PutMapping()
+    @Operation(summary = "Descuenta un producto del carrito", description = "Descuenta una unidad del producto del carrito del cliente")
     public ResponseEntity<String> updateOneProduct(@RequestBody UpdateProductRequest request) {
         try {
             service.deleteProductFromCart(request.getClientId(), request.getProductId());

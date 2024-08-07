@@ -2,6 +2,8 @@ package com.abmcoder.abm.controllers;
 
 import com.abmcoder.abm.entities.Client;
 import com.abmcoder.abm.services.ClientsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path="api/v1/clients")
+@RequestMapping(path="api/v1/auth")
+@Tag(name = "Rutas del cliente", description = "CRUD clientes")
 public class ClientsController {
 
     @Autowired
     private ClientsService service;
 
-    @PostMapping()
+    @PostMapping("/register")
+    @Operation(summary = "Crea un nuevo cliente")
     public ResponseEntity<Client> saveClient(@RequestBody Client client) {
         try {
             return new ResponseEntity<>(service.saveClient(client), HttpStatus.CREATED);
@@ -27,6 +31,7 @@ public class ClientsController {
         }
     }
 
+    @Operation(summary = "Obtiene todos los clientes")
     @GetMapping()
     public ResponseEntity<List<Client>> readClients() {
         try {
@@ -37,6 +42,7 @@ public class ClientsController {
         }
     }
 
+    @Operation(summary = "Obtiene un cliente")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Client>> readOneClient(@PathVariable("id") long id) {
         try {
@@ -47,6 +53,7 @@ public class ClientsController {
         }
     }
 
+    @Operation(summary = "Borra un cliente")
     @DeleteMapping("/{id}")
     public ResponseEntity<Client>  destroyOneClient(@PathVariable("id") long id) {
         try {
@@ -58,7 +65,8 @@ public class ClientsController {
         }
     }
 
-    @PatchMapping("/{id}")
+    @Operation(summary = "Edita un cliente")
+    @PatchMapping("/me/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client data) {
         try {
             Optional<Client> optionalClient = service.readOneClient(id);
