@@ -27,6 +27,11 @@ public interface CartsRepository extends JpaRepository<Cart, Long> {
     @Query("UPDATE Cart c SET c.amount = c.amount - 1 WHERE c.client.id = :clientId AND c.product.id = :productId AND c.amount > 0 AND c.payed = false")
     void decrementProductAmount(Long clientId, Long productId);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Cart c WHERE c.client.id = :clientId AND c.payed = false")
+    void deleteCartsByClientId(Long clientId);
+
 
     @Modifying
     @Transactional

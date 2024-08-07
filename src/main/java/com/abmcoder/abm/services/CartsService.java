@@ -37,6 +37,10 @@ public class CartsService {
         repository.deleteById(id);
     }
 
+    public void destroyCartsByClientId(Long id) {
+        repository.deleteCartsByClientId(id);
+    }
+
     public void deleteProductFromCart(Long clientId, Long productId) {
         repository.decrementProductAmount(clientId, productId);
         repository.deleteEmptyProduct(clientId, productId);

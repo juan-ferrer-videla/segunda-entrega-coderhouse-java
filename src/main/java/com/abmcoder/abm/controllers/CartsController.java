@@ -65,8 +65,8 @@ public class CartsController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> destroyOneProduct(@PathVariable("id") long id) {
         try {
-            service.destroyOneCart(id);
-            return ResponseEntity.ok("Product deleted");
+            service.destroyCartsByClientId(id);
+            return ResponseEntity.ok("Delete cart");
         } catch (Exception exception) {
             System.out.println(exception);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
