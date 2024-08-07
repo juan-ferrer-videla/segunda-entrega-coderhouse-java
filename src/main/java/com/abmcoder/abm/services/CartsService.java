@@ -46,12 +46,11 @@ public class CartsService {
         repository.deleteEmptyProduct(clientId, productId);
     }
 
-    public Cart addToCart(Cart cart) throws Exception {
-        Long productId = cart.getProduct().getId();
-        Long clientId = cart.getClient().getId();
+    public Cart addToCart(Long clientId, Long productId, Integer quantity) throws Exception {
 
         Optional<Product> optionalProduct = productRepository.findById(productId);
         Optional<Client> optionalClient = clientRepository.findById(clientId);
+        Cart cart = new Cart();
 
         if (optionalProduct.isPresent() && optionalClient.isPresent()) {
             Product product = optionalProduct.get();
@@ -66,14 +65,14 @@ public class CartsService {
 
             if (carts.size() > 0) {
                 Cart cartToUpdate = carts.get(0);
-                if (stock < cartToUpdate.getAmount() + cart.getAmount()) {
-                    throw new Exception("No existen " + (cartToUpdate.getAmount() + cart.getAmount()) + " unidades en stock");
+                if (stock < cartToUpdate.getAmount() + quantity) {
+                    throw new Exception("No existen " + (cartToUpdate.getAmount() + quantity) + " unidades en stock");
                 }
-                cartToUpdate.setAmount(cartToUpdate.getAmount() + cart.getAmount());
+                cartToUpdate.setAmount(cartToUpdate.getAmount() + quantity);
                 return repository.save(cartToUpdate);
             } else {
                 if (stock < cart.getAmount()) {
-                    throw new Exception("No existen " + cart.getAmount() + " unidades en stock");
+                    throw new Exception("No existen " + quantity + " unidades en stock");
                 }
                 return repository.save(cart);
             }
