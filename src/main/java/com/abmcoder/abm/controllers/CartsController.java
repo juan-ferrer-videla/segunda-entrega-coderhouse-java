@@ -52,23 +52,24 @@ public class CartsController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Obtiene los productos del carrito del cliente", description = "Obtiene los productos del carrito impago de un cliente en especifico")
-    public List<Cart> readCartsByClientId(@PathVariable("id") long id) {
+    public ResponseEntity<List<Cart>> readCartsByClientId(@PathVariable("id") long id) {
         try {
-            return service.readCartsByClientId(id);
+            return ResponseEntity.ok(service.readCartsByClientId(id));
         } catch (Exception exception) {
             System.out.println(exception);
-            throw new RuntimeException("READ ONE ERROR");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Operation(summary = "Elimina los productos del carrito del cliente", description = "Elimina los productos del carrito impagos de un cliente en especifico")
     @DeleteMapping("/{id}")
-    public void destroyOneProduct(@PathVariable("id") long id) {
+    public ResponseEntity<String> destroyOneProduct(@PathVariable("id") long id) {
         try {
             service.destroyOneCart(id);
+            return ResponseEntity.ok("Product deleted");
         } catch (Exception exception) {
             System.out.println(exception);
-            throw new RuntimeException("DELETE ONE ERROR");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
